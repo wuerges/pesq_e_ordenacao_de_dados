@@ -10,6 +10,10 @@ class P:
     def __eq__(self, o):
         return self.x == o.x and self.y == o.y
 
+
+    def lt(self, o):
+        return self.x <= o.x and self.y <= o.y
+
     def __repr__(self):
         return "P({}, {})".format(self.x, self.y)
 
