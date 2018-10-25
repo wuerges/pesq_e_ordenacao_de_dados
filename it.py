@@ -1,5 +1,5 @@
 
-identity = int(1e16)
+identity = 0
 
 class P:
     def __init__(self, x, y):
@@ -52,12 +52,13 @@ class IT:
     def update(self, i, v):
         #if the interval covers the subtree completely
         if i.p1.lt(self.i.p1) and self.i.p2.lt(i.p2):
+            print("lazy", self, i, v)
             self.lazy = (True, v)
             return
         if self.i.cols(i):
-            self.v = v
             print("collides", self, i, v)
             if self.i.p1 == self.i.p2:
+                self.v = v
                 return
             else:
                 self.get_q1().update(i, v)
@@ -82,18 +83,18 @@ class IT:
     def query(self, i):
         self.push()
 
-        print("query", self, i)
         if not self.i.cols(i):
             return identity
         else:
+            print("query", self, i)
             if self.i.p1 == self.i.p2:
                 return self.v
             else:
                 r = identity
-                r = min(self.get_q1().query(i), r)
-                r = min(self.get_q2().query(i), r)
-                r = min(self.get_q3().query(i), r)
-                r = min(self.get_q4().query(i), r)
+                r = max(self.get_q1().query(i), r)
+                r = max(self.get_q2().query(i), r)
+                r = max(self.get_q3().query(i), r)
+                r = max(self.get_q4().query(i), r)
                 return r
 
 
