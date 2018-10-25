@@ -39,6 +39,7 @@ class IT:
     def __init__(self, p1, p2):
         self.i = I(p1, p2)
         self.v = identity
+        self.lazy = (False, 0)
         self.mid = self.i.mid()
         self.q1 = None
         self.q2 = None
@@ -49,6 +50,10 @@ class IT:
         return "IT({}, {})".format(self.i, self.v)
 
     def update(self, i, v):
+        #if the interval covers the subtree completely
+        if i.p1.lt(self.i.p1) and self.i.p2.lt(i.p2):
+            self.lazy = (True, v)
+            return
         if self.i.cols(i):
             self.v = v
             print("collides", self, i, v)
@@ -60,7 +65,23 @@ class IT:
                 self.get_q3().update(i, v)
                 self.get_q4().update(i, v)
 
+
+    def push(self):
+        (l, v) = self.lazy
+        self.lazy = (False, 0)
+        if l:
+            if self.i.p1 == self.i.p2:
+                self.v = v
+            else:
+                self.get_q1().update(self.i, v)
+                self.get_q2().update(self.i, v)
+                self.get_q3().update(self.i, v)
+                self.get_q4().update(self.i, v)
+
+
     def query(self, i):
+        self.push()
+
         print("query", self, i)
         if not self.i.cols(i):
             return identity
