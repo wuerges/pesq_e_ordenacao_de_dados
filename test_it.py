@@ -8,3 +8,4 @@ i1 = I(P(5, 10), P(20, 30))
 
 
 t1.update(i1, 5)
+print(t1.query(i1))

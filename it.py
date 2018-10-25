@@ -1,5 +1,5 @@
 
-
+identity = int(1e16)
 
 class P:
     def __init__(self, x, y):
@@ -9,6 +9,9 @@ class P:
 
     def __eq__(self, o):
         return self.x == o.x and self.y == o.y
+
+    def __repr__(self):
+        return "P({}, {})".format(self.x, self.y)
 
 class I:
     def __init__(self, p1, p2):
@@ -25,20 +28,26 @@ class I:
         ry = self.p1.y <= i.p1.y <= self.p2.y or self.p1.y <= i.p2.y <= self.p2.y
         return rx and ry
 
+    def __repr__(self):
+        return "I({}, {})".format(self.p1, self.p2)
 
 class IT:
     def __init__(self, p1, p2):
         self.i = I(p1, p2)
-        self.v = int(1e16)
+        self.v = identity
         self.mid = self.i.mid()
         self.q1 = None
         self.q2 = None
         self.q3 = None
         self.q4 = None
 
+    def __repr__(self):
+        return "IT({}, {})".format(self.i, self.v)
+
     def update(self, i, v):
         if self.i.cols(i):
             self.v = v
+            print("collides", self, i, v)
             if self.i.p1 == self.i.p2:
                 return
             else:
@@ -46,6 +55,22 @@ class IT:
                 self.get_q2().update(i, v)
                 self.get_q3().update(i, v)
                 self.get_q4().update(i, v)
+
+    def query(self, i):
+        print("query", self, i)
+        if not self.i.cols(i):
+            return identity
+        else:
+            if self.i.p1 == self.i.p2:
+                return self.v
+            else:
+                r = identity
+                r = min(self.get_q1().query(i), r)
+                r = min(self.get_q2().query(i), r)
+                r = min(self.get_q3().query(i), r)
+                r = min(self.get_q4().query(i), r)
+                return r
+
 
     def get_q1(self):
         if not self.q1:
