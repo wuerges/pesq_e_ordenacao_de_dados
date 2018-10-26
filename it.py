@@ -27,10 +27,12 @@ class I:
         midy = (self.p1.y + self.p2.y) // 2
         return P(midx, midy)
 
+    def inside(self, p):
+
+        return self.p1.lt(p) and p.lt(self.p2)
+
     def cols(self, i):
-        rx = self.p1.x <= i.p1.x <= self.p2.x or self.p1.x <= i.p2.x <= self.p2.x
-        ry = self.p1.y <= i.p1.y <= self.p2.y or self.p1.y <= i.p2.y <= self.p2.y
-        return rx and ry
+        return self.inside(i.p1) or self.inside(i.p2) or self.inside(P(i.p1.x, i.p2.y)) or self.inside(P(i.p2.x, i.p2.y))
 
     def __repr__(self):
         return "I({}, {})".format(self.p1, self.p2)
