@@ -1,11 +1,11 @@
-
 #include <vector>
 #include <iostream>
 using namespace std;
 
+const int INF = 1e8;
 
 
-void swap(int & a, int & b) { 
+void swap(int & a, int & b) {
   int c = a;
   a = b;
   b = c;
@@ -25,14 +25,6 @@ void bubble_sort(vector<int> & vs) {
 void merge_sort(vector<int> & vs, int a=0, int b = -1) {
   if(b < 0) b = vs.size() -1;
 
-  cout << "a=" << a << '\n';
-  cout << "b=" << b << '\n';
-  for(int k : vs) {
-    cout << k << " ";
-  }
-  cout << '\n';
-
-
   if(b == a) {
     return;
   }
@@ -49,22 +41,19 @@ void merge_sort(vector<int> & vs, int a=0, int b = -1) {
 
 
   vector<int> aux(b-a+1);
+  int li = a, ri = mid+1;
   for(int i = 0; i < aux.size(); ++i) {
-    if(vs[a] < vs[b]) {
-      aux[i] = vs[a];
-      a++;
+    int va = li <= mid ? vs[li] : INF;
+    int vb = ri <= b ? vs[ri] : INF;
+    if(va < vb) {
+      aux[i] = va;
+      li++;
     }
     else {
-      aux[i] = vs[b];
-      b++;
+      aux[i] = vb;
+      ri++;
     }
   }
-
-  cout << "aux: ";
-  for(int k : aux) {
-    cout << k << ' ';
-  }
-  cout << '\n';
 
   for(int i = 0; i < aux.size(); ++i) {
     vs[ia+i] = aux[i];
@@ -76,6 +65,7 @@ void merge_sort(vector<int> & vs, int a=0, int b = -1) {
 
 int main() {
   vector<int> vs{ 4, 5, 3, 12, 8, 2, 10, 20, 22};
+  // vector<int> vs{ 2, 1, 0 };
 
   for(int k : vs) {
     cout << k << " ";
